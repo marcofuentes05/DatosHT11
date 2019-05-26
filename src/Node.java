@@ -6,7 +6,7 @@
 public class Node <E> {
     protected E data; //Valor que se almacena en este nodo
     protected Node<E> nextElement; //Referencia al siguiente nodo
-    
+
     //Constructor
 
     /**
@@ -19,7 +19,7 @@ public class Node <E> {
        data = v;
        nextElement = next;
     }
-    
+
     public Node(E v)
    // post: constructs a new tail of a list with value v
    {
@@ -31,7 +31,7 @@ public class Node <E> {
    {
       return nextElement;
    }
-   
+
    public void setNext(Node<E> next)
    // post: sets reference to new next value
    {

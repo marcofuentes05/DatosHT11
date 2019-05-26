@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -5,7 +6,7 @@ public class GraphMatrix <V,E> {
     protected int size; // allocation size for graph
     protected Object data[][]; // matrix - array of arrays
     protected Map<V,GraphMatrixVertex<V>> dict; // labels -> vertices
-    protected SingleLinkedList<Integer> freeList; // available indices in matrix
+    protected ArrayList<Integer> freeList; // available indices in matrix
     protected boolean directed; // graph is directed
 
     protected GraphMatrix(int size, boolean dir)
@@ -17,9 +18,9 @@ public class GraphMatrix <V,E> {
         // label to index translation table
         dict = new Hashtable<>(size);
         // put all indices in the free list
-        freeList = new SingleLinkedList<>();
+        freeList = new ArrayList<>();
         for (int row = size-1; row >= 0; row--)
-            freeList.addLast(row);
+            freeList.add(row);
     }
 
     public void add(V label)
@@ -32,7 +33,12 @@ public class GraphMatrix <V,E> {
         // verificar que aun existan indices disponibles para el vertice
         //Assert.pre(!freeList.isEmpty(),"Matrix not full");
         // allocate a free row and column
-        int row = freeList.removeFirst().intValue();
+        int row = 0;
+        if (freeList.size() > 0) {
+            row = freeList.get(freeList.size()-1);
+            freeList.remove(freeList.get(freeList.size()-1));
+        }
+
         // add vertex to dictionary
         dict.put(label, new GraphMatrixVertex<V>(label, row));
     }
@@ -68,5 +74,39 @@ public class GraphMatrix <V,E> {
         // update matrix with new edge
         Arista<V,E> e = new Arista<V,E>(vtx1.getEtiqueta(),vtx2.getEtiqueta(),label,true);
         data[vtx1.index()][vtx2.index()] = e;
+    }
+
+    public boolean contains(V key){
+        return dict.containsKey(key);
+    }
+
+    public Integer pesoArista(V ciudad1 , V ciudad2){
+        try{
+            int indice1 = dict.get(ciudad1).index;
+            int indice2 = dict.get(ciudad2).index;
+            if (data[indice1][indice2] != null){
+                Arista t = (Arista)data[indice1][indice2];
+                return (int)t.etiqueta;
+            }else{
+                return -1;
+            }
+        }catch(Exception e){
+            //e.printStackTrace();
+            return -2;
+        }
+    }
+
+    public void imprimirData(){
+        for (int i = 0;i<size;i++){
+            for (int j = 0;j<size;j++){
+                if (data[i][j] != null) {
+                    Arista t = (Arista) data[i][j];
+                    System.out.print(" "+t.etiqueta+" ");
+                }else{
+                    System.out.print("null");
+                }
+            }
+            System.out.println("");
+        }
     }
 }

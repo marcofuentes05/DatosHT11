@@ -17,7 +17,7 @@ public class SingleLinkedList <E> extends AbstractList <E> {
      * El primer elemento de la lista
      */
     protected Node <E> head;
-    
+
     /**
      * Constructor
      */
@@ -30,7 +30,7 @@ public class SingleLinkedList <E> extends AbstractList <E> {
   {
     return count;
   }
-  
+
   public void addFirst(E value)
   // post: value is added to beginning of list
   {
@@ -39,7 +39,7 @@ public class SingleLinkedList <E> extends AbstractList <E> {
      head = new Node<E>(value, head);
      count++;
   }
-  
+
   public E removeFirst()
   // pre: list is not empty
   // post: removes and returns value from beginning of list
@@ -49,14 +49,14 @@ public class SingleLinkedList <E> extends AbstractList <E> {
      count--;
      return temp.value();
   }
-  
+
   public E getFirst()
   // pre: list is not empty
   // post: returns first value in list
   {
       return head.value();
   }
-  
+
   public void addLast(E value)
   // post: adds value to end of list
   {
@@ -70,21 +70,21 @@ public class SingleLinkedList <E> extends AbstractList <E> {
          {
                 finger = finger.next();
          }
-		 
+
          finger.setNext(temp);
       } else head = temp;
-	  
+
 	  count++;
-	  
+
    }
-   
-   
+
+
    public boolean contains(E value)
    // pre: value is not null
    // post: returns true iff value is found in list
   {
       Node<E> finger = head;
-	  
+
       while (finger != null &&
              !finger.value().equals(value))
      {
@@ -149,9 +149,7 @@ public class SingleLinkedList <E> extends AbstractList <E> {
     }
 
     @Override
-    public void add(int i, E o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void add(int i, E o) {}
 
     @Override
     public E remove(int i) {

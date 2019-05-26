@@ -26,12 +26,13 @@ public class Main {
                 grafo.add(partes[1]);
                 grafo.addEdge(partes[0],partes[1],Integer.parseInt(partes[2]));
             }
+
+            grafo.imprimirData();
+            System.out.println(grafo.pesoArista("guatemala","escuintla"));
+
         }catch(Exception e){
             e.printStackTrace();
         }
-
-
-
     }
 }
 
