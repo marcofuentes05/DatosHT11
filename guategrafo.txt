@@ -2,3 +2,4 @@ guatemala escuintla 100
 escuintla xela 200
 xela amatitlan 500
 amatitlan peten 600
+guatemala peten 700

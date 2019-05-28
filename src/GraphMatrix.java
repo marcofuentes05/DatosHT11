@@ -8,6 +8,7 @@ public class GraphMatrix <V,E> {
     protected Map<V,GraphMatrixVertex<V>> dict; // labels -> vertices
     protected ArrayList<Integer> freeList; // available indices in matrix
     protected boolean directed; // graph is directed
+    protected ArrayList<V> nodos;
 
     protected GraphMatrix(int size, boolean dir)
     {
@@ -19,6 +20,7 @@ public class GraphMatrix <V,E> {
         dict = new Hashtable<>(size);
         // put all indices in the free list
         freeList = new ArrayList<>();
+        nodos = new ArrayList<>();
         for (int row = size-1; row >= 0; row--)
             freeList.add(row);
     }
@@ -29,7 +31,9 @@ public class GraphMatrix <V,E> {
     // if vertex with label is already in graph, no action
     {
         // if there already, do nothing
-        if (dict.containsKey(label)) return;
+        if (dict.containsKey(label)){
+            return;
+        }
         // verificar que aun existan indices disponibles para el vertice
         //Assert.pre(!freeList.isEmpty(),"Matrix not full");
         // allocate a free row and column
@@ -41,6 +45,8 @@ public class GraphMatrix <V,E> {
 
         // add vertex to dictionary
         dict.put(label, new GraphMatrixVertex<V>(label, row));
+        //add vertex to list
+        nodos.add(label);
     }
     public V remove(V label)
     // pre: label is non-null vertex label
@@ -108,5 +114,9 @@ public class GraphMatrix <V,E> {
             }
             System.out.println("");
         }
+    }
+
+    public V get(int n ){
+        return nodos.get(n);
     }
 }
