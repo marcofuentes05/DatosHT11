@@ -9,18 +9,22 @@ public class Main {
         ArrayList<String> lista = new ArrayList();
         int contador = 0;
         try {
+            //Aqui se pone la direccion del archivo que vamos a usar para armar el grafo
+            //NOTA el archivo ha de tener, en cada linea, NOMBRECIUDAD1 NOMBRECIUDAD2 KM, con los km en numeros, y sin espacios de mas
             File f  = new File("C:\\Users\\fuent\\OneDrive\\Documents\\2019\\Estructuras de Datos\\DatosHT11\\guategrafo.txt");
             BufferedReader br = new BufferedReader(new FileReader(f));
 
             String st;
             while ((st = br.readLine()) != null) {
                 contador++;
-                System.out.println(st);
+                //System.out.println(st);
                 lista.add(st);
             }
 
-            GraphMatrixDirected<String, Double> grafo = new GraphMatrixDirected<>(5);
+            //Creamos el objeto grafo
+            GraphMatrixDirected<String, Double> grafo = new GraphMatrixDirected<>(contador);
 
+            //Analizamos el txt y agregamos los nodos correspondientes
             for (int i = 0;i<lista.size();i++){
                 String[] partes = lista.get(i).split(" ");
                 grafo.add(partes[0]);
@@ -28,11 +32,11 @@ public class Main {
                 grafo.addEdge(partes[0],partes[1],Double.parseDouble(partes[2]));
             }
 
-            grafo.imprimirData();
+            //grafo.imprimirData();
             //System.out.println(grafo.pesoArista("guatemala","peten"));
-            System.out.println("\n\n\tHOLA\n\n");
+            //System.out.println("\n\n\tHOLA\n\n");
             Double[][] m0 = floydWarshal(grafo.data);
-            for (int i = 0;i<m0[0].length;i++){
+            /*for (int i = 0;i<m0[0].length;i++){
                 for (int j = 0;j<m0[0].length;j++){
                     if (m0[i][j] != Double.POSITIVE_INFINITY) {
                         System.out.print(" - " + m0[i][j]);
@@ -41,7 +45,7 @@ public class Main {
                     }
                 }
                 System.out.println("");
-            }
+            }*/
             boolean sigue = true;
             while (sigue){
                 String menu = "\n\tBienvenido al programa de las elecciones\n1. Quiero conocer la ruta mas corta entre dos ciudades\n2. Quiero saber el nombre de la ciudad del dentro del grafo\n3. Quiero modificar el grafo\n4. Salir";
@@ -56,7 +60,15 @@ public class Main {
                         System.out.println("Ingrese el nombre de la ciudad 2");
                         String c2 = sc.nextLine();
                         if (grafo.contains(c2)){
-                            System.out.println("La ruta mas corta entre "+c1+" y "+c2+" es de "+m0[grafo.dict.get(c1).index][grafo.dict.get(c2).index]+"Km");
+                            if (m0[grafo.dict.get(c1).index][grafo.dict.get(c2).index] != Double.POSITIVE_INFINITY){
+                                System.out.println("La ruta mas corta entre "+c1+" y "+c2+" es de "+m0[grafo.dict.get(c1).index][grafo.dict.get(c2).index]+"Km");
+                                System.out.println("La ruta es la siguiente:");
+                                double[][] ady = adyacencia(grafo.data);
+                                dijkstra(ady,grafo.dict.get(c1).index,grafo.dict.get(c2).index,grafo);
+                            }else{
+                                //Si la ruta mas corta es infinito, no hay rutas
+                                System.out.println("No hay rutas entre estas dos ciudades...");
+                            }
                         }
                         else{
                             System.out.println("Esa ciudad no esta en el grafo :(");
@@ -76,21 +88,24 @@ public class Main {
                             System.out.println(("Ingrese el nombre de la ciudad 2"));
                             String c2 = sc.nextLine();
                             if (grafo.contains(c2)){
-                                System.out.println("¿Cual es la nueva distancia (en km)? - Ingrese -1 (MENOS UNO) para indicar que una distancia infinita");
-                                Scanner n = new Scanner(System.in);
-                                try{
-                                    double distancia = Double.parseDouble(n.nextLine());
-                                    if (distancia > -1){
-                                        Arista t = (Arista) grafo.data[grafo.dict.get(c1).index][grafo.dict.get(c2).index];
-                                        t.etiqueta = distancia;
-                                    }else if (distancia == -1){
-                                        Arista t = (Arista) grafo.data[grafo.dict.get(c1).index][grafo.dict.get(c2).index];
-                                        t.etiqueta = Double.POSITIVE_INFINITY;
-                                    }else{
-                                        System.out.println("Ese no es un valor permitido...");
+                                Arista t = (Arista) grafo.data[grafo.dict.get(c1).index][grafo.dict.get(c2).index];
+                                if (t  == null){
+                                    System.out.println("No hay una carretera directa entre esas dos ciudades");
+                                }else{
+                                    System.out.println("¿Cual es la nueva distancia (en km)? - Ingrese -1 (MENOS UNO) para indicar que una distancia infinita");
+                                    Scanner n = new Scanner(System.in);
+                                    try{
+                                        double distancia = Double.parseDouble(n.nextLine());
+                                        if (distancia > -1){
+                                            t.etiqueta = distancia;
+                                        }else if (distancia == -1){
+                                            t.etiqueta = Double.POSITIVE_INFINITY;
+                                        }else{
+                                            System.out.println("Ese no es un valor permitido...");
+                                        }
+                                    }catch(Exception e){
+                                        System.out.println("Ese no es un dato valido...");
                                     }
-                                }catch(Exception e){
-                                    System.out.println("Ese no es un dato valido...");
                                 }
                             }else{
                                 System.out.println(c2+" no esta en el grafo :(");
@@ -207,9 +222,11 @@ public class Main {
 
     /*El siguiente codigo fue obtenido de https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
     * y fue modificado para que funcionara con nuestra matriz de adyacencia*/
-
+    //Le paso la matriz de adyacencia que tengo del metodo ADYACENCIA() y el indice de los nodos que quiero
     private static void dijkstra(double[][] adjacencyMatrix,
-                                 int startVertex)
+                                 int startVertex,
+                                 int finalVertex,
+                                 GraphMatrixDirected<String, Double> grafo)
     {
         int nVertices = adjacencyMatrix[0].length;
 
@@ -293,32 +310,24 @@ public class Main {
             }
         }
 
-        printSolution(startVertex, shortestDistances, parents);
+        printSolution(startVertex, shortestDistances, parents,finalVertex,grafo);
     }
 
     private static void printSolution(int startVertex,
                                       double[] distances,
-                                      int[] parents)
+                                      int[] parents,
+                                      int finalVertex,
+                                      GraphMatrixDirected<String, Double> grafo)
     {
-        int nVertices = distances.length;
-        System.out.print("Vertex\t Distance\tPath");
 
-        for (int vertexIndex = 0;
-             vertexIndex < nVertices;
-             vertexIndex++)
-        {
-            if (vertexIndex != startVertex)
-            {
-                System.out.print("\n" + startVertex + " -> ");
-                System.out.print(vertexIndex + " \t\t ");
-                System.out.print(distances[vertexIndex] + "\t\t");
-                printPath(vertexIndex, parents);
-            }
-        }
+        System.out.println("----------------------------------");
+        System.out.print("\t");
+        printPath(finalVertex, parents, grafo);
+        System.out.println("\n----------------------------------");
     }
 
     private static void printPath(int currentVertex,
-                                  int[] parents)
+                                  int[] parents,GraphMatrixDirected<String, Double> grafo)
     {
 
         // Base case : Source node has
@@ -327,17 +336,25 @@ public class Main {
         {
             return;
         }
-        printPath(parents[currentVertex], parents);
-        System.out.print(currentVertex + " ");
+        printPath(parents[currentVertex], parents, grafo);
+        ArrayList<String> keys = new ArrayList(grafo.dict.keySet());
+
+        System.out.print(grafo.nodos.get(currentVertex) + " ");
     }
 
-    private double[][] adyacencia(Arista<String, Double>[][] matriz){
+    private static double[][] adyacencia(Object[][] matriz){
         int n = matriz[0].length;
         double[][] res = new double[n][n];
         for (int i = 0;i<n;i++){
             for(int j = 0;j<n;j++){
                 //recorro toda la matriz
-                res[i][j]=matriz[i][j].etiqueta;
+                Arista<String,Double> t = (Arista) matriz[i][j];
+                if (t != null){
+                    res[i][j]=t.etiqueta;
+                }else{
+                    res[i][j] = Double.POSITIVE_INFINITY;
+                }
+
             }
         }
         return res;
