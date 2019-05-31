@@ -119,4 +119,17 @@ public class GraphMatrix <V,E> {
     public V get(int n ){
         return nodos.get(n);
     }
+
+    public int getIndex(V vertice){
+        //pre: vertice es un vertice del grafo
+        //pos: retorna el indice de dicho vertice en la matriz
+        int n = 0;
+        ArrayList<V> keys = new ArrayList(dict.keySet());
+        for (int i = 0;i<keys.size();i++){
+            if (keys.get(i).equals(vertice)){
+                n = i;
+            }
+        }
+        return n;
+    }
 }
