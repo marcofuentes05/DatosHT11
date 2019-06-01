@@ -165,7 +165,7 @@ public class Main {
     }
 
     /**
-     * Metodo para la distancia mas corta
+     * Metodo para la distancia mas corta entre dos pares cualesquiera de nodos del grafo
      * @param grafo
      * @return
      */
@@ -184,7 +184,6 @@ public class Main {
                 }
             }
         }
-
         for(k=0;k<tamano;k++){
             for(i=0;i<tamano;i++){
                 for (j=0;j<tamano;j++){

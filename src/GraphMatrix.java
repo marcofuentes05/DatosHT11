@@ -65,6 +65,7 @@ public class GraphMatrix <V,E> {
         }
         // add node index to free list
         freeList.add(new Integer(index));
+        nodos.remove(label);
         return vert.getEtiqueta();
     }
 
