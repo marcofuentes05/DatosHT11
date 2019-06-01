@@ -4,6 +4,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Programa con grafos de ciudades, camino mas corto y centro
+ * @author Andy Castillo, Marco Fuentes
+ */
 public class Main {
     public static void main (String [] args){
         ArrayList<String> lista = new ArrayList();
@@ -160,6 +164,11 @@ public class Main {
         }
     }
 
+    /**
+     * Metodo para la distancia mas corta
+     * @param grafo
+     * @return
+     */
     public static Double [][] floydWarshal(Object[][] grafo){
         int tamano = grafo.length;
         Double distancia[][] = new Double[tamano][tamano];
@@ -191,6 +200,12 @@ public class Main {
         return distancia;
     }
 
+    /**
+     * Metodo para calcular el centro del grafo
+     * @param grafo
+     * @param g
+     * @return
+     */
     public static String centroDeGrafo(Double[][]grafo, GraphMatrixDirected<String, Double> g){
         String centro;
         int tamano = grafo[0].length;
@@ -220,6 +235,13 @@ public class Main {
         return centro;
     }
 
+    /**
+     * Metodo para la ruta corta y los nodos que estan en la ruta
+     * @param adjacencyMatrix
+     * @param startVertex
+     * @param finalVertex
+     * @param grafo
+     */
     /*El siguiente codigo fue obtenido de https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
     * y fue modificado para que funcionara con nuestra matriz de adyacencia*/
     //Le paso la matriz de adyacencia que tengo del metodo ADYACENCIA() y el indice de los nodos que quiero
@@ -313,6 +335,14 @@ public class Main {
         printSolution(startVertex, shortestDistances, parents,finalVertex,grafo);
     }
 
+    /**
+     * Metodo para imprimir la solucion
+     * @param startVertex
+     * @param distances
+     * @param parents
+     * @param finalVertex
+     * @param grafo
+     */
     private static void printSolution(int startVertex,
                                       double[] distances,
                                       int[] parents,
@@ -326,6 +356,12 @@ public class Main {
         System.out.println("\n----------------------------------");
     }
 
+    /**
+     * Metodo para imprimit el camino
+     * @param currentVertex
+     * @param parents
+     * @param grafo
+     */
     private static void printPath(int currentVertex,
                                   int[] parents,GraphMatrixDirected<String, Double> grafo)
     {
@@ -342,6 +378,11 @@ public class Main {
         System.out.print(grafo.nodos.get(currentVertex) + " ");
     }
 
+    /**
+     * Metodo para el nodo de adyacencia
+     * @param matriz
+     * @return
+     */
     private static double[][] adyacencia(Object[][] matriz){
         int n = matriz[0].length;
         double[][] res = new double[n][n];
